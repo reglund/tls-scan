@@ -1,2 +1,3 @@
 # tls-scan
-TLS scan using 
+TLS scan using ssllabs.com API. 
+
