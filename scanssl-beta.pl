@@ -94,7 +94,7 @@ foreach(@ips){
 # Below you need to enter the url to where you saved your json files 
     my $html_middle = << "END";
     <tr>
-	<td><a href="$jsonfilename">$host</a></td>
+	<td><a href="$_">$host</a></td>
 	<td><span class="$class">$grade</span></td>
 	<td><span class="$date_class">$notafter</span></td>
     </tr>
