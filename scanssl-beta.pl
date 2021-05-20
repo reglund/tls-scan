@@ -45,10 +45,12 @@ print $fh $html_top;
 chmod 0644,$filename_tmp;
 
 foreach(@ips){    
+    my @path = split(/\//,$_);
+    my $appname = $path[0];
+    my $jsonfilename = "json/$appname.json";
     my $result = `~/git/ssllabs-scan/ssllabs-scan-v3 $_`; #Enter your own path
     my $decoded = decode_json($result);
-    my $jsonfilename = "json/$_.json";
-    
+
     open(my $jfh, '>', $jsonfilename)
 	or die "Could not open file '$jsonfilename' $!";
    
