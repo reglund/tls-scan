@@ -37,7 +37,7 @@ my $html_top = << "END";
     <body>
       <table>
          <tr>
-           <th>Hostname</th><th>TLS grade</th><th>Expiration date</th>
+           <th>Hostname</th><th>TLS grade</th><th>Expiration date</th><th>Certificate Issuer</th>
 END
 
 print $fh $html_top;
@@ -50,7 +50,7 @@ foreach(@ips){
     my $jsonfilename = "json/$appname.json";
     my $result = `~/git/ssllabs-scan/ssllabs-scan-v3 $_`; #Enter your own path
     my $decoded = decode_json($result);
-
+    my $issuer;
     open(my $jfh, '>', $jsonfilename)
 	or die "Could not open file '$jsonfilename' $!";
    
@@ -67,6 +67,8 @@ foreach(@ips){
 	$grade = $decoded->[0]{endpoints}[0]{grade};
 	my $timestampDateTime = DateTime->from_epoch( epoch => str2time ( $timestamp ));
 	my $notafterDateTime = DateTime->from_epoch( epoch => $decoded->[0]{certs}[0]{notAfter}/1000);
+	$issuer = $decoded->[0]{certs}[1]{commonNames}[0];
+
 	$notafterDateTime->set_time_zone('CET');
 	$notafter = $notafterDateTime->strftime('%Y-%m-%d');
 	my $diff = $notafterDateTime->subtract_datetime($timestampDateTime);
@@ -97,6 +99,7 @@ foreach(@ips){
 	<td><a href="$_">$host</a></td>
 	<td><span class="$class">$grade</span></td>
 	<td><span class="$date_class">$notafter</span></td>
+        <td>$issuer</td>
     </tr>
 END
 print $fh $html_middle;
@@ -108,11 +111,11 @@ my $run_time = sprintf("%.1f",($end_run - $start_run)/60);
 
 my $html_bottom = << "END";
      <tr>
-       <td colspan="3">Last updated: $timestamp, total runtime: $run_time minutes</\
+       <td colspan="4">Last updated: $timestamp, total runtime: $run_time minutes</\
 td>
      </tr>
     <tr>
-       <td colspan="3">Based on ssllabs.com</td>
+       <td colspan="4">Based on ssllabs.com</td>
     </tr>
    </table>
   </body>
