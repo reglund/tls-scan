@@ -48,7 +48,8 @@ foreach(@ips){
     my @path = split(/\//,$_);
     my $appname = $path[0];
     my $jsonfilename = "json/$appname.json";
-    my $result = `~/git/ssllabs-scan/ssllabs-scan-v3 --usecache true $_`; #Enter your own path
+    my $result = `~/git/ssllabs-scan/ssllabs-scan-v3 $_`; #Enter your own path
+    #Enable cache later: `~/git/ssllabs-scan/ssllabs-scan-v3 --usecache true $_`;
     my $decoded = decode_json($result);
     my $issuer;
     open(my $jfh, '>', $jsonfilename)
